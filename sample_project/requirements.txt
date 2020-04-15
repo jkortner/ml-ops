@@ -1,2 +1,5 @@
+nose
+coverage
+bandit
 pylint
 autopep8
