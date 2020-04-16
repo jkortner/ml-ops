@@ -7,14 +7,14 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
 
 ## Setting up the SonarQube server
 
-1. Run the sonarqube Docker image (latest version 8.2)
+1. Run the SonarQube Docker image (latest version 8.2)
    ```
    docker run -d --name sonarqube --stop-timeout 3600 -p 9000:9000 sonarqube
    ```
 
    - `-d` run in background
    - `--name` identifier of the container
-   - `--stop-timeout` wait for 3600 seconds until forcing container to stop (see [sonarqube container docu](https://hub.docker.com/_/sonarqube/), Section *Avoid hard termination of SonarQube*)
+   - `--stop-timeout` wait for 3600 seconds until forcing container to stop (see [SonarQube container docu](https://hub.docker.com/_/sonarqube/), Section *Avoid hard termination of SonarQube*)
    - `-p` port forwarding from container to Docker host
 
   2. Access SonarQube at `http://localhost:9000` and login as *admin*/*admin*
@@ -29,7 +29,7 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
     pip install -r sample_project/requirements.txt
     ```
 
- 2. Configure the SonarQube project with [sample_project/sonar-project.properties](sample_project/sonar-project.properties):
+ 2. Configure the SonarQube project with [sample_project/sonar-project.properties](../sample_project/sonar-project.properties):
     ```
     # unique project identifier
     sonar.projectKey=SampleProject
@@ -57,7 +57,7 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
     
     The full documentation can be found [here](https://docs.sonarqube.org/latest/analysis/analysis-parameters/) and Python related settings can be found [here](https://docs.sonarqube.org/latest/analysis/coverage/).
 
- 3. Install the sonarqube client used for generating and sending reports:    
+ 3. Install the SonarQube client used for generating and sending reports:    
     ```
     brew install sonar-scanner
     ```
@@ -65,7 +65,7 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
    ```bash
    ./sonar-update.sh
    ```
-   The [bash script](sample_project/sonar-update.sh) generates external reports (unittests, coverage, pylint, bandit) and runs `sonar-scanner` in order to generate internal reports and transmit all reports to SonarQube server at http://localhost:9000 (default).
+   The [bash script](../sample_project/sonar-update.sh) generates external reports (unittests, coverage, pylint, bandit) and runs `sonar-scanner` in order to generate internal reports and transmit all reports to SonarQube server at http://localhost:9000 (default).
    Notes: 
     - [`nosetests`](https://nose.readthedocs.io/en/latest/usage.html) creates unittest results and unittest code coverage, see `nosetests -h`
     - [`pylint`](https://www.pylint.org) creates code analysis report with respect to [PEP8](https://www.python.org/dev/peps/pep-0008/) compliance.
