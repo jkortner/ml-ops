@@ -14,7 +14,7 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
 
    - `-d` run in background
    - `--name` identifier of the container
-   - `--stop-timeout` wait for 3600 seconds until forcing container to stop (see [SonarQube container docu](https://hub.docker.com/_/sonarqube/), Section *Avoid hard termination of SonarQube*)
+   - `--stop-timeout` wait for 3600 seconds until forcing container to stop (see [SonarQube container docu](https://hub.docker.com/_/sonarqube/), section *Avoid hard termination of SonarQube*)
    - `-p` port forwarding from container to Docker host
 
   2. Access SonarQube at `http://localhost:9000` and login as *admin*/*admin*
