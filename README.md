@@ -10,7 +10,7 @@ The aim of this project is to test tools for MLOps and provide a minimal version
 
 ## Docker
 
-Most of the components used in the DevOps and MLOps pipelines are based based on Docker. Here are some recommendations to install Docker on macOS:
+Most of the components used in the DevOps and MLOps pipelines are based on Docker. Here are some recommendations to install Docker on macOS:
 
 1. Install Docker Desktop (Docker for Mac) via homebrew:
    ```
