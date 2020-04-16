@@ -7,8 +7,8 @@ Notes on setting up a Docker build pipeline within a Docker container:
  - Setting up a **Docker** build pipeline *within* a Docker container requires to run Docker in Docker. This could be achieved by forwarding the (Docker) host Docker daemon to the jenkins Docker container as explained in the blog post "[do-not-use-docker-in-docker-for-ci](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)". 
  - Docker images with Docker can be found [here](https://hub.docker.com/_/docker). According to the documentation it is "generally not recommended" to run Docker in Docker.
 
- For the above reasons, and since we do not intend to install and manage Jenkins by ourselves, Jenkins is not suitable for a Docker-based DevOps / MLOps pipeline and will not be considered further at the moment.
- However, here are some notes to get started with the jenkins Docker container:
+ For the above reasons, and since we do not intend to install and manage Jenkins by ourselves, Jenkins is not suitable for a Docker-based DevOps / MLOps pipeline.
+ However, here are some notes on how to get started with the jenkins Docker container:
 
 1. Run the [jenkins:lts Docker container](https://github.com/jenkinsci/docker/blob/master/README.md):
  ```
