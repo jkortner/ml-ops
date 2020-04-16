@@ -76,9 +76,12 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
 6. In the web interface, login as administrator *admin*/*admin* and create a custom Python quality profile that inherits from the default Python profile. Add all rules available (except the rules tagged as deprecated) which results in 468 active rules and 34 inactive rules (the default Python profile has 101 active rules). Note that rules are updated in the SonarQube repositories, thus, the exact numbers will change.   
 7. Repeat step 4 and re-run `sonar-update.sh`. The project statistic in the web interface should have updated and report one bug for the failed unittest and 8 code smells for PEP8 violations.
 
-To deactivate the `venv` after testing the container run: `deactivate`.
+You might want to have a look at the *Quality Gates* in the web interface that define conditions for determining whether your code meets the minimum quality standards. Note that SonarQube follows the [*clean as you code*](https://docs.sonarqube.org/latest/user-guide/clean-as-you-code/) principle, thus, quality gates are only applied on new code by default (there are settings for *overall code*). 
 
 Further configurations are described in the SonarQube [documentation](https://docs.sonarqube.org/latest/).
+
+To deactivate the `venv` after testing the container run: `deactivate`.
+
 
 ## Generating reports from Docker
 
