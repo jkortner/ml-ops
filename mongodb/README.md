@@ -1,18 +1,7 @@
 # MongoDB Storage Container
 
-## Docker Installation
+The MongoDB installation is based on Docker. For installing Docker see [here](../README.md).
 
-1. Install Docker Desktop (Docker for Mac) via homebrew:
-   ```
-   brew cask install docker
-   ```
-
-2. Start the Docker application (installed in /Applications) in order to have the command line extensions installed (WARNING: this conflicts with Docker Toolbox)
-
-Notes: 
- - `brew cask install docker` is different from `brew install docker docker-machine docker-compose` which installs the old Docker Toolbox that requires virtualbox. Docker Desktop comes with its own virtualization framework.
- - You do not have to create a Docker account. The command line tools will just work.
- - The operations below will most likely work with Docker Toolbox but have been tested only with Docker Desktop. 
 
 ## MongoDB Container
 
