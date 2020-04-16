@@ -11,9 +11,9 @@ Notes on setting up a Docker build pipeline within a Docker container:
  However, here are some notes on how to get started with the jenkins Docker container:
 
 1. Run the [jenkins:lts Docker container](https://github.com/jenkinsci/docker/blob/master/README.md):
- ```
- docker run -d --name jenkins -v jenkins_home:/var/jenkins_home -v <git_repo>:/var/jenkins_repo -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
- ```
+   ```
+   docker run -d --name jenkins -v jenkins_home:/var/jenkins_home -v <git_repo>:/var/jenkins_repo -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+   ```
 
    - `-d` run in background
    - `--name` identifier of the container
@@ -22,17 +22,17 @@ Notes on setting up a Docker build pipeline within a Docker container:
    - `-p` port forwarding from container to Docker host
 
 2. Access jenkins at `http://localhost:8080` and obtain access token from container log:
-```
-docker logs jenkins
-```
+   ```
+   docker logs jenkins
+   ```
 3. Create user and install recommended plugins
 4. Add *Freestyle project* and add local git repository (see above) with url:
-```
-file:///var/jenkins_repo
-```
+   ```
+   file:///var/jenkins_repo
+   ```
 5. Run build which should already show you the hash and comment of the last git commit in the *Console Output*
 6. Set up a Python build pipeline which will typically involve running unittests and/or code metrics as Python does not need to be "build". A Python environment is required for this purpose:
 
-    - Some general information including links can be found at [jenkins.io/solutions/python](https://jenkins.io/solutions/python/)
-    - The environment might by provided by Jenkins plugins, like [ShiningPanda](https://plugins.jenkins.io/shiningpanda/). (Only Python2.7 has been available out of the box)
-    - You could extend the Jenkins Docker image by installing the Python environment by yourself. See this [blog article](http://www.alexconrad.org/2011/10/jenkins-and-python.html) for setting up Jenkins and Python on a Ubuntu machine. 
+   - Some general information including links can be found at [jenkins.io/solutions/python](https://jenkins.io/solutions/python/)
+   - The environment might by provided by Jenkins plugins, like [ShiningPanda](https://plugins.jenkins.io/shiningpanda/). (Only Python2.7 has been available out of the box)
+   - You could extend the Jenkins Docker image by installing the Python environment by yourself. See this [blog article](http://www.alexconrad.org/2011/10/jenkins-and-python.html) for setting up Jenkins and Python on a Ubuntu machine. 
