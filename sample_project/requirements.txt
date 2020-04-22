@@ -1,5 +1,1 @@
-nose
-coverage
-bandit
-pylint
-autopep8
+-e .
