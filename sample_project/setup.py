@@ -3,17 +3,25 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setup(name="SampleProject",
       version="0.1",
-      packages=find_packages(),
-      test_suite='tests',
+      # exclude all subpackages that contain 'tests'
+      # note: top-level tests dir requires directive in MANIFEST.in
+      packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
+      # test_suite='tests',
       scripts=['bin/sampleproject'],
+      # generate start script automatically
+      # entry_points={'console_scripts': ['sampleproject=project.sample:main']},
       setup_requires=['wheel'],
-      install_requires=['nose',
-                        'coverage',
-                        'bandit',
-                        'pylint',
-                        'autopep8',
-                        'flake8'
-                        ],
+      # define package dependencies
+      # install_requires=[],
+      # defines def environment containing additional dependencies
+      # (for linting, testing)
+      extras_require={'dev': ['nose',
+                              'coverage',
+                              'bandit',
+                              'pylint',
+                              'autopep8',
+                              'flake8']
+                      },
 
       # package_data={
       #     # If any package contains *.txt or *.rst files, include them:
@@ -35,11 +43,13 @@ setup(name="SampleProject",
       #     "Documentation": "https://docs.example.com/HelloWorld/",
       #     "Source Code": "https://code.example.com/HelloWorld/",
       # },
-      classifiers=[
-          "Programming Language :: Python :: 3",
-          #  "License :: OSI Approved :: MIT License",
-          "Operating System :: OS Independent",
-      ]
+      platforms=['any'],
+      license='None',
+      classifiers=["Programming Language :: Python :: 3",
+                   #  "License :: OSI Approved :: MIT License",
+                   #  "License :: Other/Proprietary License",
+                   "Operating System :: OS Independent",
+                   ]
 
       # could also include url, project_urls, keywords etc.
       )
