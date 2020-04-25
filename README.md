@@ -8,6 +8,15 @@ The aim of this project is to test tools for MLOps and provide a minimal version
   <img src=images/ml-ops.png>
 </p>
 
+Platform components are run in an ensemble of Docker containers:
+
+ - [Jenkins](jenkins/README.md) build server (open: Docker deployment in Docker, status: hold)
+ - [SonarQube](sonarqube/README.md) continuous code quality monitoring (done)
+ - [MongoDB](mongodb/README.md) for storing data samples and meta information (open: use in sample project, status: TODO)
+ - [pip](sample_project/README.md) for packaging Python apps and managing dependencies (done)
+ - [Theia](sandbox/README.md) for developing in a Docker container (done?)
+ - [MLFlow](sandbox/README.md) for model and experiment management (open: run in Docker, status: TODO)
+
 ## Docker
 
 Most of the components used in the DevOps and MLOps pipelines are based on Docker. Here are some recommendations to install Docker on macOS:
