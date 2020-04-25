@@ -3,9 +3,9 @@
 The MongoDB installation is based on Docker. For installing Docker see [here](../README.md).
 
 
-## MongoDB Container
+## MongoDB container
 
-1. Setup a persistent Docker volume that  we will use to store the database (this step can be omitted as the volume is implictely created if not present in step 2):
+1. Setup a persistent Docker volume that  we will use to store the database (this step can be omitted as the volume is implicitly created if not present in step 2):
    ```
    docker volume create mongodb_data
    ```
