@@ -29,52 +29,56 @@ Follow the step below in order to set up SonarQube in a Docker container and ana
     pip install -r sample_project/requirements.txt
     ```
 
- 2. Configure the SonarQube project with [sample_project/sonar-project.properties](../sample_project/sonar-project.properties):
-    ```
-    # unique project identifier
-    sonar.projectKey=SampleProject
-    # project display name in web interface
-    #sonar.projectName=SampleProject	
-    sonar.projectVersion=0.1
-    # encoding
-    sonar.sourceEncoding=UTF-8
-    
-    # source directory/package (must contain __init__.py) 
-    sonar.sources=project
-    # exclude generated unittest reports from analysis
-    sonar.exclusions=tests/*.xml
-    
-    # unittests directory/package (must contain __init__.py)
-    sonar.tests=tests
-    # report for unittest results
-    sonar.python.xunit.reportPath=tests/nosetests.xml
-    # report for unittest coverage
-    sonar.python.coverage.reportPaths=tests/coverage.xml
-    # linting
-    sonar.python.pylint.reportPath=pylint_report.txt
-    sonar.python.bandit.reportPaths=bandit_report.json
-     ```
-    
-    The full documentation can be found [here](https://docs.sonarqube.org/latest/analysis/analysis-parameters/) and Python related settings can be found [here](https://docs.sonarqube.org/latest/analysis/coverage/).
-
- 3. Install the SonarQube client used for generating and sending reports:    
+ 2. Install the SonarQube client used for generating and sending reports:    
     ```
     brew install sonar-scanner
     ```
-4. Generate and send report (current working directory: `ml-ops/sample_project`):
+
+ 4. Configure the SonarQube project with [sample_project/sonar-project.properties](../sample_project/sonar-project.properties):
+
+3. Generate and send report (current working directory: `ml-ops/sample_project`):
    ```bash
-   ./sonar-update.sh
+   make clean && make sonar
    ```
-   The [bash script](../sample_project/sonar-update.sh) generates external reports (unittests, coverage, pylint, bandit) and runs `sonar-scanner` in order to generate internal reports and transmit all reports to SonarQube server at http://localhost:9000 (default).
+   The [Makefile](../sample_project/Makefile) has targets for generating external reports (unittests, coverage, pylint, bandit) and running `sonar-scanner` in order to generate internal reports and transmit all reports to SonarQube server at http://localhost:9000 (default).
    Notes: 
     - [`nosetests`](https://nose.readthedocs.io/en/latest/usage.html) creates unittest results and unittest code coverage, see `nosetests -h`
     - [`pylint`](https://www.pylint.org) creates code analysis report with respect to [PEP8](https://www.python.org/dev/peps/pep-0008/) compliance.
       Messages have to follow a defined format, see [SonarQube docu](https://docs.sonarqube.org/latest/analysis/languages/python/) (section Pylint) and `pylint -h`
     - [`bandit`](https://pypi.org/project/bandit/) create code analysis reports with respect to common security issues in Python, SonarQube expects json report, also see `bandit -h`
+    - [sonar-scanner](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/) is configured with command line flags according to:
+      ```
+      # SonarQube URL
+      sonar.host.url=http://localhost:9000
+      # unique project identifier
+      sonar.projectKey=sampleproject
+      # project display name in web interface
+      #sonar.projectName=sampleproject	
+      sonar.projectVersion=0.1
+      # encoding
+      sonar.sourceEncoding=UTF-8
+    
+      # source directory/package (must contain __init__.py) 
+      sonar.sources=sampleproject
+      # exclude generated unittest reports from analysis
+      sonar.exclusions=tests/*.xml
+    
+      # unittests directory/package (must contain __init__.py)
+      sonar.tests=tests
+      # report for unittest results
+      sonar.python.xunit.reportPath=tests/nosetests.xml
+      # report for unittest coverage
+      sonar.python.coverage.reportPaths=tests/coverage.xml
+      # linting
+      sonar.python.pylint.reportPath=pylint_report.txt
+      sonar.python.bandit.reportPaths=bandit_report.json
+       ```
+    
+      The full documentation can be found [here](https://docs.sonarqube.org/latest/analysis/analysis-parameters/) and Python related settings can be found [here](https://docs.sonarqube.org/latest/analysis/coverage/).
 
-5. Go to `http://localhost:9000`. The project has been created with default quality profiles, see *Project Settings*.
-6. In the web interface, login as administrator *admin*/*admin* and create a custom Python quality profile that inherits from the default Python profile. Add all rules available (except the rules tagged as deprecated) which results in 468 active rules and 34 inactive rules (the default Python profile has 101 active rules). Note that rules are updated in the SonarQube repositories, thus, the exact numbers will change.   
-7. Repeat step 4 and re-run `sonar-update.sh`. The project statistic in the web interface should have updated and report one bug for the failed unittest and 8 code smells for PEP8 violations.
+4. Go to `http://localhost:9000`. The project has been created with default quality profiles, see *Project Settings*.
+5. In the web interface, login as administrator *admin*/*admin* and create a custom Python quality profile that inherits from the default Python profile. Add all rules available (except the rules tagged as deprecated) which results in 468 active rules and 34 inactive rules (the default Python profile has 101 active rules). Note that rules are updated in the SonarQube repositories, thus, the exact numbers will change.   
+6. Repeat step 4 and re-run `make sonar`. The project statistic in the web interface should have updated and report one bug for the failed unittest and 8 code smells for PEP8 violations.
 
 You might want to have a look at the *Quality Gates* in the web interface that define conditions for determining whether your code meets the minimum quality standards. Note that SonarQube follows the [*clean as you code*](https://docs.sonarqube.org/latest/user-guide/clean-as-you-code/) principle, thus, quality gates are only applied on new code by default (there are settings for *overall code*). 
 
