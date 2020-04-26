@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
-setup(name="SampleProject",
+setup(name="sampleproject",
       version="0.1",
       # exclude all subpackages that contain 'tests'
       # note: top-level tests dir requires directive in MANIFEST.in
@@ -9,7 +9,8 @@ setup(name="SampleProject",
       # test_suite='tests',
       scripts=['bin/sampleproject'],
       # generate start script automatically
-      # entry_points={'console_scripts': ['sampleproject=project.sample:main']},
+      # entry_points={'console_scripts':
+      #               ['sampleproject=sampleproject.sample:main']},
       setup_requires=['wheel'],
       # define package dependencies
       # install_requires=[],

@@ -11,7 +11,7 @@ The project structure follows ideas discussed on [stackoverflow](https://stackov
  - Use a `requirements.txt` file for setting up development environment (refers to `setup.py`).
  - Use a `setup.py` file for defining the app's pip deployment package (including dependencies). 
  - Use a `MANIFEST.in` file for advanced pip package build directives.
- - Don't use an `src` directory (redundant) but a top-level Python import package (here `project` directory).
+ - Don't use an `src` directory (redundant) but a top-level Python import package (here `sampleproject` directory).
  - Use a `tests` directory for unit tests (directory is a Python import package).
  - Use a `bin` directory for storing scripts/binaries that are directly executable.
 
@@ -77,8 +77,12 @@ the [`setup.py`](setup.py) file.
 1. After switching to your virtual Python environment build the (binary) wheel (current working directory `ml-ops/sample_project`):
    ```
    python setup.py bdist_wheel
+   # alternatively run the command with make (see Makefile):
+   make bdist_wheel
    ```
    Notes (on `setup.py`):
+    - `name`: The name of the pip/Python package must match the name of the top-level import package in order to let the [Makefile](Makefile) work correctly.
+    - `version`: Either define your project version here or generate it accordingly. The version has to follow a defined [pattern](https://packaging.python.org/guides/distributing-packages-using-setuptools/#choosing-a-versioning-scheme).  
     - `packages`: Defines how to include/exclude Python import packages. Can be specified manually or with [find_packages](https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages). Projects using an `src` directory ([bad practice](https://docs.python-guide.org/writing/structure/#the-actual-module)) can *include* the `src` directory only. Otherwise, you have to *exclude* everything you do not want to ship with your deployment package. 
     - `tests` directory contains unit test which are typically not part of the deployment package. Excluding tests requires `exclude` [definitions](https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages) and [directives](https://stackoverflow.com/questions/8556996/setuptools-troubles-excluding-packages-including-data-files/11669299#11669299) in the `MANIFEST.in` file.
     - `scripts`: Provides executables which are important to easily access the functionalities provided by the package (important for use with Docker). Executables are automatically installed on the `PATH`.
@@ -98,7 +102,7 @@ the [`setup.py`](setup.py) file.
    source venv_test/bin/activate
    
    # Install package into fresh environment
-   pip install sample_project/dist/SampleProject-0.1-py3-none-any.whl
+   pip install sample_project/dist/sampleproject-0.1-py3-none-any.whl
    ``` 
 
 3. Test the installed application:
