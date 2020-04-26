@@ -15,7 +15,17 @@ The project structure follows ideas discussed on [stackoverflow](https://stackov
  - Use a `tests` directory for unit tests (directory is a Python import package).
  - Use a `bin` directory for storing scripts/binaries that are directly executable.
 
- The SonarQube files are used for [code quality reporting](../sonarqube/README.md).
+ The [Makefile](Makefile) file is used in order to simplify building and [code quality reporting](../sonarqube/README.md).
+```
+# code quality reporting
+make clean && make sonar
+
+# building
+make clean && make bdist_wheel
+
+# or both for convenience
+make clean && make
+```
 
 Documentation:
  
