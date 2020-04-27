@@ -42,13 +42,13 @@ $(BANDITREP):
 
 sonar: $(NOSETESTSREP) $(COVERAGEREP) $(PYLINTREP) $(BANDITREP)
 	sonar-scanner -Dsonar.host.url=http://localhost:9000 \
-				  -Dsonar.projectKey=$(NAME) \
-				  -Dsonar.projectVersion=$(VERSION) \
-				  -Dsonar.sourceEncoding=UTF-8 \
-				  -Dsonar.sources=$(MODULE) \
-				  -Dsonar.exclusions=$(TESTS)/*.xml \
-				  -Dsonar.tests=$(TESTS) \
-   				  -Dsonar.python.xunit.reportPath=$(NOSETESTSREP) \
-   				  -Dsonar.python.coverage.reportPaths=$(COVERAGEREP) \
-   				  -Dsonar.python.pylint.reportPath=$(PYLINTREP) \
-   				  -Dsonar.python.bandit.reportPaths=$(BANDITREP)
+              -Dsonar.projectKey=$(NAME) \
+              -Dsonar.projectVersion=$(VERSION) \
+              -Dsonar.sourceEncoding=UTF-8 \
+              -Dsonar.sources=$(MODULE) \
+              -Dsonar.exclusions=$(TESTS)/*.xml \
+              -Dsonar.tests=$(TESTS) \
+              -Dsonar.python.xunit.reportPath=$(NOSETESTSREP) \
+              -Dsonar.python.coverage.reportPaths=$(COVERAGEREP) \
+              -Dsonar.python.pylint.reportPath=$(PYLINTREP) \
+              -Dsonar.python.bandit.reportPaths=$(BANDITREP)
