@@ -1,6 +1,10 @@
 from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
+# ATTENTION: the name must match the name of the top-level import package
+# see Makefile variable MODULE
+# naming the project as the top-level import package is also consistent with
+# conventions.
 setup(name="sampleproject",
       version="0.1",
       # exclude all subpackages that contain 'tests'
