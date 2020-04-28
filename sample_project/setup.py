@@ -11,7 +11,7 @@ setup(name="sampleproject",
       # note: top-level tests dir requires directive in MANIFEST.in
       packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
       # test_suite='tests',
-      scripts=['bin/sampleproject'],
+      scripts=['scripts/sampleproject'],
       # generate start script automatically
       # entry_points={'console_scripts':
       #               ['sampleproject=sampleproject.sample:main']},
