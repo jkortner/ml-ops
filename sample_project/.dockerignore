@@ -1,5 +1,7 @@
 Dockerfile
 .dockerignore
+.gitignore
+.git/
 .coverage
 .scannerwork
 .sonarreports/
