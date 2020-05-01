@@ -1,8 +1,7 @@
 .coverage
 .scannerwork
+.sonarreports/
 .eggs
 *.egg-info/
 build/
 dist/
-bandit_report.json
-pylint_report.txt
