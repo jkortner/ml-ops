@@ -10,12 +10,13 @@ The aim of this project is to test tools for MLOps and provide a minimal version
 
 Platform components are run in an ensemble of Docker containers:
 
- - [Jenkins](jenkins/README.md) build server (open: Docker deployment in Docker, status: hold)
- - [SonarQube](sonarqube/README.md) continuous code quality monitoring (done)
- - [MongoDB](mongodb/README.md) for storing data samples and meta information (open: use in sample project, status: TODO)
- - [pip](sample_project/README.md) for packaging Python apps and managing dependencies (done)
- - [Theia](sandbox/README.md) for developing in a Docker container (done?)
- - [MLFlow](sandbox/README.md) for model and experiment management (open: run in Docker, status: TODO)
+ - [Jenkins](jenkins/README.md) build server
+ - [SonarQube](sonarqube/README.md) continuous code quality monitoring
+ - [MongoDB](mongodb/README.md) for storing data samples and meta information
+ - [pip](sample_project/README.md) for packaging Python apps and managing dependencies 
+ - [multi-stage build](sample_project/README.md) for building/testing and deploying Python app in Docker 
+ - [Theia](sandbox/README.md) for developing in a Docker container 
+ - [MLFlow](sandbox/README.md) for model and experiment management
 
 ## Docker
 
