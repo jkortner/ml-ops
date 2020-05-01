@@ -149,7 +149,7 @@ are explained [above](#build-pip-package-for-deployment).
     - `--network` specifies the name of the Docker network for building the image
     - `-t pyapp` specifies the name of the tag that can be used to refer to the image
     - `.` refers to the current directory where Docker expects a `Dockerfile`
-    - This example assumes that the current directory is (typically) the root of your git repository and, therefore, ignores the .git directory (see [.dockerignore](.dockerignore)). The repository itself should not be copied to the image for building. Consequently, the SonarQube version control support is disabled when reporting results, see flag used in [Dockerfile](Dockerfile) when calling `make`.
+    - This example assumes that the current directory is (typically) the root of your git repository and, therefore, ignores the .git directory (see [.dockerignore](.dockerignore)). The repository itself should not be copied to the image for building. Consequently, the SonarQube version control support is disabled when reporting results, see flag used in [Dockerfile](Dockerfile) when calling the [Makefile](Makefile) with `make`.
 
 3. Run the newly built image by (implicitly) creating a container:
    ```bash
@@ -159,7 +159,10 @@ are explained [above](#build-pip-package-for-deployment).
     - `--rm` deletes the container after the program terminates
     - `pyapp` specifies the name of the image
     - The container runs the script specified at `ENTRYPOINT` at the end of [Dockerfile](Dockerfile). The default argument is defined at `CMD` and can
-    be overwritten the arguments to the `docker run` command above, e.g., `docker run --rm pyapp 45 46` 
+    be overwritten the arguments to the `docker run` command above, e.g., 
+      ```bash
+      docker run --rm pyapp 45 46
+      ```
 
 4. In order to obtain the wheel that was built in the build process, copy the `dist` directory from the container to a local directory, here `dist_pyapp_container`:
    ```bash
