@@ -9,6 +9,7 @@ VERSION:=$(shell python setup.py --version)
 MODULE=$(NAME)
 SONARHOST=localhost
 SONARPORT=9000
+SONARNOSCM=False
 
 .PHONY: all clean bdist_wheel dev_deps sonar
 
@@ -54,6 +55,7 @@ sonar: $(NOSETESTSREP) $(COVERAGEREP) $(PYLINTREP) $(BANDITREP)
               -Dsonar.sourceEncoding=UTF-8 \
               -Dsonar.sources=$(MODULE) \
               -Dsonar.tests=$(TESTS) \
+              -Dsonar.scm.disabled=$(SONARNOSCM) \
               -Dsonar.python.xunit.reportPath=$(NOSETESTSREP) \
               -Dsonar.python.coverage.reportPaths=$(COVERAGEREP) \
               -Dsonar.python.pylint.reportPath=$(PYLINTREP) \

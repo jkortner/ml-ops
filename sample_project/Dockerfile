@@ -35,7 +35,10 @@ RUN make dev_deps
 # --> see Makefile
 # this can easily be achieved by naming the SonarQube container 'sonarqube' and
 # building this image within the same (docker) network where 'sonarqube' runs 
-RUN make clean && make SONARHOST=sonarqube
+# SONARNOSCM disables SonarQube's version control support (e.g., for git) as
+# it is not customary to copy the actual repository (.git/) into the the image
+# for building (also see Makefile) 
+RUN make clean && make SONARHOST=sonarqube SONARNOSCM=True
 
 # Start a new stage for the deployment image in order to minimize image size
 # --> sonar-scanner and test libs are not required here 
