@@ -126,3 +126,51 @@ Documentation:
  - Blog post for building a [bdist_wheel](https://dzone.com/articles/executable-package-pip-install)
  - Commented [setup.py](https://github.com/pypa/sampleproject/blob/master/setup.py) (reference)
  - [Stackoverflow](https://stackoverflow.com/questions/1471994/what-is-setup-py) on what is `setup.py`
+
+ ## Build Docker image for deployment
+
+The [Dockerfile](Dockerfile) implements a multi-stage Docker image build for 
+running unit tests, code coverage, code analysis, SonarQube reporting,
+building a Python wheel in a first stage as well as installing the wheel in a
+minimal image within the second stage. The Dockerfile implements the steps which
+are explained [above](#build-pip-package-for-deployment).
+
+1. For reporting analyses to SonarQube, the `sonarqube` [container](../sonarqube/README.md) must be running and must be connected to the same Docker network, which will be used in the Docker image build below:
+   ```bash
+   docker network create cicd
+   docker network connect cicd sonarqube
+   ```
+2. The build process for sample_project will be triggered within the `cicd` network:
+   ```bash
+   docker build --rm --network=cicd -t pyapp .
+   ```
+   Notes:
+    - `--rm` flag removes intermediate containers (also useful with `docker run`)
+    - `--network` specifies the name of the Docker network for building the image
+    - `-t pyapp` specifies the name of the tag that can be used to refer to the image
+    - `.` refers to the current directory where Docker expects a `Dockerfile`
+    - This example assumes that the current directory is (typically) the root of your git repository and, therefore, ignores the .git directory (see [.dockerignore](.dockerignore)). The repository itself should not be copied to the image for building. Consequently, the SonarQube version control support is disabled when reporting results, see flag used in [Dockerfile](Dockerfile) when calling `make`.
+
+3. Run the newly built image by (implicitly) creating a container:
+   ```bash
+   docker run --rm pyapp
+   ```
+   Notes:
+    - `--rm` deletes the container after the program terminates
+    - `pyapp` specifies the name of the image
+    - The container runs the script specified at `ENTRYPOINT` at the end of [Dockerfile](Dockerfile). The default argument is defined at `CMD` and can
+    be overwritten the arguments to the `docker run` command above, e.g., `docker run --rm pyapp 45 46` 
+
+4. In order to obtain the wheel that was built in the build process, copy the `dist` directory from the container to a local directory, here `dist_pyapp_container`:
+   ```bash
+   # Create a container
+   docker container create --name pyapp pyapp
+   # Recursively copy from container to Docker host
+   docker cp pyapp:/dist dist_pyapp_container
+   # Remove container that was created above
+   docker container rm pyapp
+   ```
+   Notes:
+    - `docker cp` does not support wildcards. Since the name of the `whl` file is generated automatically, it is easier to copy a directory with the wheel file than copying the wheel file directly (provided that the directory has a generic name).
+
+  Also have a look at the [Dockerfile](Dockerfile) which contains detailed comments for every step.
