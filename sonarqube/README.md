@@ -5,36 +5,62 @@ Some recommendations regarding a Docker installation on macOS can be found [here
 
 Follow the step below in order to set up SonarQube in a Docker container and analyze the Python code in [sample_project](../sample_project).
 
-## Setting up the SonarQube server
+## Setting up SonarQube server with embedded database
 
-1. Run the SonarQube Docker image (latest version 8.2)
-   ```
+1. Run the SonarQube Docker image (latest version 8.3):
+   ```bash
    docker run -d --name sonarqube --stop-timeout 3600 -p 9000:9000 sonarqube
    ```
-
-   - `-d` run in background
-   - `--name` identifier of the container
-   - `--stop-timeout` wait for 3600 seconds until forcing container to stop (see [SonarQube container docu](https://hub.docker.com/_/sonarqube/), section *Avoid hard termination of SonarQube*)
-   - `-p` port forwarding from container to Docker host
+   Notes:
+    - `-d` run in background
+    - `--name` identifier of the container
+    - `--stop-timeout` wait for 3600 seconds until forcing container to stop (see [SonarQube container docu](https://hub.docker.com/_/sonarqube/), section *Avoid hard termination of SonarQube*)
+    - `-p` port forwarding from container to Docker host
 
   2. Access SonarQube at `http://localhost:9000` and login as *admin*/*admin*
-  3. There is no need to manually create a project in the web interface as it can be created automatically by publishing analysis reports (see below)
+  3. Note the warning at the bottom of the page informing you that you are using an embedded database which is not suitable for production (only evaluation).
+  4. There is no need to manually create a project in the web interface as it can be created automatically by publishing analysis reports (see below).
+  5. Stop the container with
+     ```bash
+     docker stop sonarqube
+     ```
+
+## Setting up SonarQube server with PostgreSQL
+
+1. Multiple docker containers can be run with `docker-compose` (current working directory: `ml-ops/sonarqube`):
+   ```bash
+   docker-compose up -d
+   ```
+   Notes:
+    - `-d` run in background
+    - [docker-compose.yml (see comments)](docker-compose.yml) defines services, networks and volumes
+    - `docker-compose` auto-generates names for containers (based on services), networks and volumes by prefixing each name from the [docker-compose.yml](docker-compose.yml) with `projectname_` where `projectname` defaults to the name of the current directory. The project name can be specified with command-line parameter `-p`, e.g., `docker-compose -p project up -d` or with environment variable `COMPOSE_PROJECT_NAME`, [see docker reference](https://docs.docker.com/compose/reference/envvars/#compose_project_name).     
+    - Since we are only interested in preserving analysis data for projects, it is sufficient to use a single docker volume for postgresql data (`db_data`). The contents of all other directories, which might be worth preserving according to the [SonarQube documentation on Docker Hub](https://hub.docker.com/_/sonarqube/), are not modified.
+    - **Attention:** database credentials are specified over the command-line. This is insecure. For example, the credentials will be visible to any user by calling `top`, try `docker-compose top`.
+  2. Access SonarQube at `http://localhost:9000` and login as *admin*/*admin*
+  3. Note that the embedded database warning at the bottom of the page (see above) disappeared.
+  4. There is no need to manually create a project in the web interface as it can be created automatically by publishing analysis reports (see below).
+  5. Stop and remove the containers with
+     ```bash
+     docker-compose -p sonarqube stop
+     ```
+
 
 ## Generating reports from macOS
 
  1. Setup a virtual environment and install the requirements (current working directory: `ml-ops`):
-    ```
+    ```bash
     python3 -m venv venv_sampleproject
     source venv_sampleproject/bin/activate
     pip install -r sample_project/requirements.txt
     ```
 
  2. Install the SonarQube client used for generating and sending reports:    
-    ```
+    ```bash
     brew install sonar-scanner
     ```
 
- 4. Configure the SonarQube project with [sample_project/sonar-project.properties](../sample_project/sonar-project.properties):
+ 4. Configure the SonarQube project with `sonar-scanner` command-line arguments in the `sample_project` [Makefile](../sample_project/Makefile):
 
 3. Generate and send report (current working directory: `ml-ops/sample_project`):
    ```bash
@@ -89,5 +115,19 @@ To deactivate the `venv` after testing the container run: `deactivate`.
 
 ## Generating reports from Docker
 
-TODO
+Docker images are supposed to be minimal, thus, installing test tools and `sonar-scanner` is not a good idea for images intended for deployment. [Multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/) allow for building and testing in an intermediate image, before installing the final application into a minimal deployment image.
+
+The [sample_project](../sample_project/README.md) demonstrates the following approach:
+1. Define a Python pip package including dependencies and application code with [setup.py](../sample_project/setup.py).
+2. Define [Makefile](../sample_project/Makefile) targets `dev_deps` and `sonar` in oder to easily install (development) dependencies and run `sonar-scanner`.
+3. Define a multi-stage [Dockerfile](../sample_project/Dockerfile).
+
+   First stage (based on a Python based image):
+    - Installs `sonar-scanner` 
+    - Install the application dependencies 
+    - Run `sonar-scanner` and build a Python wheel (`make all`, `all` is the default target and does not have to be specified)
+
+   Second stage (based on a Python base image):
+    - Copy the wheel Python package to the final deployment image
+    - Install the wheel Python package
 

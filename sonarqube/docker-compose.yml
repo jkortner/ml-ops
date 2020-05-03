@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+    sonarqube:
+        image: sonarqube
+        # YAML interprets xx:yy as base 60 values
+        # --> always specify port definitions as string
+        # (see https://github.com/go-yaml/yaml/issues/34)
+        ports:
+            - "127.0.0.1:9000:9000"
+        networks:
+            - net
+        environment:
+            - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+            - SONARQUBE_JDBC_USERNAME=sonar
+            - SONARQUBE_JDBC_PASSWORD=sonar
+        depends_on: 
+            - db
+        # Wait for 5 minutes before killing the container
+        # --> allows for a save sonarqube shutdown
+        stop_grace_period: 5m
+
+    # The rather generic name 'db' is a convention
+    # --> convention over configuration
+    db:
+        image: postgres
+        networks:
+            - net
+        environment:
+            - POSTGRES_USER=sonar
+            - POSTGRES_PASSWORD=sonar
+        volumes:
+            - db_data:/var/lib/postgresql/data
+
+    # adminer is a database web frontend which can be used in order to inspect
+    # database contents. Uncomment service definition below if needed.
+    #
+    # adminer:
+    #     image: adminer
+    #     ports:
+    #         - "127.0.0.1:8050:8080"
+    #     networks:
+    #         - net
+    #     depends_on: 
+    #         - db
+
+# Note that auto-generated networks/volumes will be prefixed with the project
+# name, e.g., sonarqube_net, if the project name is 'sonarqube'.
+# By default the project name is the name of the current directory or it can
+# be specified via command-line parameter (-p) or with an environment variable
+# (COMPOSE_PROJECT_NAME)
+
+networks:
+    net:
+
+volumes:
+    db_data:

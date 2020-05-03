@@ -135,14 +135,19 @@ building a Python wheel in a first stage as well as installing the wheel in a
 minimal image within the second stage. The Dockerfile implements the steps which
 are explained [above](#build-pip-package-for-deployment).
 
-1. For reporting analyses to SonarQube, the `sonarqube` [container](../sonarqube/README.md) must be running and must be connected to the same Docker network, which will be used in the Docker image build below:
+1. For reporting analyses to SonarQube, the `sonarqube` [container](../sonarqube/README.md) must be running and must be connected to the same Docker network, which will be used in the Docker image build below. If you have started the `sonarqube` container with `docker run`, set up the corresponding Docker network:
    ```bash
-   docker network create cicd
-   docker network connect cicd sonarqube
+   docker network create sonarqube_net
+   docker network connect sonarqube_net sonarqube
    ```
-2. The build process for sample_project will be triggered within the `cicd` network:
+   **Note**: If you have been using `docker-compose` the network is managed in [docker-compose.yml](../sonarqube/docker-compose.yml) and should already exist. Check with
    ```bash
-   docker build --rm --network=cicd -t pyapp .
+   docker network ls
+   ```
+   You can check if the managed containers are connected to the network with `docker container inspect`.
+2. The build process for sample_project will be triggered within the `sonarqube_net` network:
+   ```bash
+   docker build --rm --network=sonarqube_net -t pyapp .
    ```
    Notes:
     - `--rm` flag removes intermediate containers (also useful with `docker run`)
