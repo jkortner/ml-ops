@@ -7,5 +7,6 @@ Dockerfile
 .sonarreports/
 .eggs
 *.egg-info/
+sonarqube/
 build/
 dist/
