@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
 
-import sys
-import platform
-import logging
 import sampleproject.sample
-
-LOGGING_FORMAT = '%(asctime)-15s: [%(name)s] %(message)s'
-# LOGGING_FORMAT = '[%(name)s] %(message)s'
-logging.basicConfig(level=logging.INFO,
-                    format=LOGGING_FORMAT)
-logging.info('[ project.sample ]')
-logging.info('%s:: %s\n', platform.node(), ' '.join(sys.argv))
-
 sampleproject.sample.main()
-
-logging.info('done')

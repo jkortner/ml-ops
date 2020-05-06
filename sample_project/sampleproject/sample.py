@@ -14,10 +14,12 @@ class Sample():
 
 def main():
     logger = logging.getLogger('sample::main')
-    parser = argparse.ArgumentParser(description='This is a sample project for'
-                                                 ' trying out DevOps / MLOps'
-                                                 ' in Python (currently adds'
-                                                 ' two numbers)')
+    logger.info('%s:: %s\n', platform.node(), ' '.join(sys.argv))
+    descr = ''.join(('This is a sample project for trying out DevOps in ',
+                     'Python. The app adds two numbers and the result is off ',
+                     'by one. (Intended for experimenting with a failing ',
+                     'unit test.)'))
+    parser = argparse.ArgumentParser(description=descr)
 
     parser.add_argument('smnd1', type=int, help='First summand')
     parser.add_argument('smnd2', type=int, help='Second summand')
@@ -28,10 +30,4 @@ def main():
 
 
 if __name__ == "__main__":
-    LOGGING_FORMAT = '%(asctime)-15s: [%(name)s] %(message)s'
-    # LOGGING_FORMAT = '[%(name)s] %(message)s'
-    logging.basicConfig(level=logging.INFO,
-                        format=LOGGING_FORMAT)
-    logging.info('[ project.sample ]')
-    logging.info('%s:: %s\n', platform.node(), ' '.join(sys.argv))
     main()
