@@ -26,11 +26,9 @@ RUN wget -U "scannercli" -q -O /opt/sonar-scanner-cli.zip https://binaries.sonar
 
 # Copy Python app into image 
 WORKDIR /app
-COPY . ./sample_project/
+COPY . .
 
-# Use Makefile in order to test/analyse and build a Python wheel from the app
-WORKDIR /app/sample_project
-RUN make dev_deps
+# Use Makefile in order to test/analyse and report results to SonarQube
 # Sonar analysis requires that SonarQube runs on host 'sonarqube' on port 9000
 # --> see Makefile
 # this can easily be achieved by naming the SonarQube container 'sonarqube' and
@@ -38,7 +36,9 @@ RUN make dev_deps
 # SONARNOSCM disables SonarQube's version control support (e.g., for git) as
 # it is not customary to copy the actual repository (.git/) into the the image
 # for building (also see Makefile) 
-RUN make clean && make SONARHOST=sonarqube SONARNOSCM=True
+RUN make clean-all && make install_dev && make sonar SONARHOST=sonarqube SONARNOSCM=True
+# Use Makefile in order to build a Python wheel from the app
+RUN make clean-all && make bdist_wheel
 
 # Start a new stage for the deployment image in order to minimize image size
 # --> sonar-scanner and test libs are not required here 
@@ -53,14 +53,14 @@ RUN groupadd appuser \
 # --> copy wheel file to its own directory with a generic name in order to
 # easily access the wheel from outside the image/container
 # --> docker cp does not support wildcards
-COPY --from=build /app/sample_project/dist/*.whl /dist/ 
+COPY --from=build /app/dist/*.whl /dist/ 
 # Install the Python wheel 
 #(also installs all dependencies are specified in the wheel)
 RUN pip install /dist/*.whl
 # Switch user/set user for running the app
 USER appuser
 # Specify entrypoint in json style 
-ENTRYPOINT ["sampleproject"]
+ENTRYPOINT ["entrypoint"]
 # Provide a default arg with CMD
 CMD ["--help"]
 # Important: both entrypoint and cmd have to be specified in json style

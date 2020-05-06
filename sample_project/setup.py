@@ -7,18 +7,19 @@ with open("README.md", "r") as fh:
 # conventions.
 setup(name="sampleproject",
       version="0.1",
-      # exclude all subpackages that contain 'tests'
-      # note: top-level tests dir requires directive in MANIFEST.in
+      # Exclude all subpackages that contain 'tests'
+      # Note: top-level tests dir requires directive in MANIFEST.in
       packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
       # test_suite='tests',
-      scripts=['scripts/sampleproject'],
-      # generate start script automatically
-      # entry_points={'console_scripts':
-      #               ['sampleproject=sampleproject.sample:main']},
+      # Include scripts/executables for application from 'scripts' directory
+      # scripts=['scripts/entrypoint'],
+      # Generate start script automatically
+      entry_points={'console_scripts':
+                    ['entrypoint=sampleproject.sample:main']},
       setup_requires=['wheel'],
-      # define package dependencies
+      # Define package dependencies
       # install_requires=[],
-      # defines def environment containing additional dependencies
+      # Defines def environment containing additional dependencies
       # (for linting, testing)
       extras_require={'dev': ['nose',
                               'coverage',
@@ -35,9 +36,9 @@ setup(name="sampleproject",
       #     "hello": ["*.msg"],
       # },
 
-      # metadata to display on PyPI
-      author="Leonard Rothacker",
-      author_email="leonard.rothacker@googlemail.com",
+      # Metadata to display on PyPI
+      author="Full Name",
+      # author_email="",
       description="This is an Example Package",
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -51,10 +52,8 @@ setup(name="sampleproject",
       platforms=['any'],
       license='None',
       classifiers=["Programming Language :: Python :: 3",
-                   #  "License :: OSI Approved :: MIT License",
+                   "License :: OSI Approved :: MIT License",
                    #  "License :: Other/Proprietary License",
                    "Operating System :: OS Independent",
                    ]
-
-      # could also include url, project_urls, keywords etc.
       )
