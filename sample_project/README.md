@@ -17,14 +17,17 @@ The project structure follows ideas discussed on [stackoverflow](https://stackov
 
  The [Makefile](Makefile) file is used in order to simplify building and [code quality reporting](../sonarqube/README.md). Note that you have to setup and activate the corresponding virtual environment (see below).
 ```
+# help message
+make
+
 # code quality reporting
-make clean && make sonar
+make clean-all && make sonar
 
-# building
-make clean && make bdist_wheel
+# building Python wheel
+make clean-all && make bdist_wheel
 
-# or both for convenience
-make clean && make
+# building Docker image
+make build_docker
 ```
 
 Documentation:
@@ -117,8 +120,12 @@ the [`setup.py`](setup.py) file.
 
 3. Test the installed application:
    ```
-   sampleproject --help
+   entrypoint --help
    ```
+   Notes:
+    - The executable has the generic name `entrypoint` since this script will
+      will directly be mapped to the entry point for `docker run` (see below).
+    - Additional executables with more specific name can be defined in `setup.py`.
 
 Documentation:
  - [Setuptools documentation](https://setuptools.readthedocs.io/en/latest/setuptools.html)
@@ -147,36 +154,38 @@ are explained [above](#build-pip-package-for-deployment).
    You can check if the managed containers are connected to the network with `docker container inspect`.
 2. The build process for sample_project will be triggered within the `sonarqube_net` network:
    ```bash
-   docker build --rm --network=sonarqube_net -t pyapp .
+   docker build --rm --network=sonarqube_net -t sampleproject .
+   # alternatively run the command with make (see Makefile):
+   make build_docker
    ```
    Notes:
     - `--rm` flag removes intermediate containers (also useful with `docker run`)
     - `--network` specifies the name of the Docker network for building the image
-    - `-t pyapp` specifies the name of the tag that can be used to refer to the image
+    - `-t sampleproject` specifies the name of the tag that can be used to refer to the image
     - `.` refers to the current directory where Docker expects a `Dockerfile`
     - This example assumes that the current directory is (typically) the root of your git repository and, therefore, ignores the .git directory (see [.dockerignore](.dockerignore)). The repository itself should not be copied to the image for building. Consequently, the SonarQube version control support is disabled when reporting results, see flag used in [Dockerfile](Dockerfile) when calling the [Makefile](Makefile) with `make`.
 
 3. Run the newly built image by (implicitly) creating a container:
    ```bash
-   docker run --rm pyapp
+   docker run --rm sampleproject
    ```
    Notes:
     - `--rm` deletes the container after the program terminates
-    - `pyapp` specifies the name of the image
+    - `sampleproject` specifies the name of the image
     - The container runs the script specified at `ENTRYPOINT` at the end of [Dockerfile](Dockerfile). The default argument is defined at `CMD` and can
     be overwritten the arguments to the `docker run` command above, e.g., 
       ```bash
-      docker run --rm pyapp 45 46
+      docker run --rm sampleproject 45 46
       ```
 
-4. In order to obtain the wheel that was built in the build process, copy the `dist` directory from the container to a local directory, here `dist_pyapp_container`:
+4. In order to obtain the wheel that was built in the build process, copy the `dist` directory from the container to a local directory, here `dist_sampleproject_container`:
    ```bash
    # Create a container
-   docker container create --name pyapp pyapp
+   docker container create --name sampleproject sampleproject
    # Recursively copy from container to Docker host
-   docker cp pyapp:/dist dist_pyapp_container
+   docker cp sampleproject:/dist dist_sampleproject_container
    # Remove container that was created above
-   docker container rm pyapp
+   docker container rm sampleproject
    ```
    Notes:
     - `docker cp` does not support wildcards. Since the name of the `whl` file is generated automatically, it is easier to copy a directory with the wheel file than copying the wheel file directly (provided that the directory has a generic name).
