@@ -16,8 +16,8 @@ Platform components are run in an ensemble of Docker containers:
 
 Resources for DevOps in Python:
 
- - [pip](dev-ops/) for packaging Python apps, managing dependencies and Docker container deployment
- - [SonarQube](dev-ops/sonarqube) continuous code quality monitoring
+ - [pip](https://github.com/lrothack/dev-ops) for packaging Python apps, managing dependencies and Docker container deployment
+ - [SonarQube](https://github.com/lrothack/dev-ops/tree/master/sonarqube) continuous code quality monitoring
  - [Jenkins](jenkins/) build server
 
 ## Docker
