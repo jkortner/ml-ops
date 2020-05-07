@@ -1,0 +1,3 @@
+[submodule "dev-ops"]
+	path = dev-ops
+	url = git@github.com:lrothack/dev-ops.git
