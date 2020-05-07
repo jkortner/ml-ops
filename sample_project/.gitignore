@@ -1,7 +1,0 @@
-.coverage
-.scannerwork
-.sonarreports/
-.eggs
-*.egg-info/
-build/
-dist/
