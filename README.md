@@ -10,12 +10,15 @@ The aim of this project is to test tools for MLOps and provide a minimal version
 
 Platform components are run in an ensemble of Docker containers:
 
- - [Jenkins](jenkins/) build server
- - [SonarQube](sonarqube/) continuous code quality monitoring
  - [MongoDB](mongodb/) for storing data samples and meta information
- - [dev-ops](https://github.com/lrothack/dev-ops) for packaging Python apps, managing dependencies and Docker container deployment 
  - [Theia](sandbox/) for developing in a Docker container 
  - [MLFlow](sandbox/) for model and experiment management
+
+Resources for DevOps in Python:
+
+ - [pip](https://github.com/lrothack/dev-ops) for packaging Python apps, managing dependencies and Docker container deployment
+ - [SonarQube](https://github.com/lrothack/dev-ops/sonarqube/) continuous code quality monitoring
+ - [Jenkins](jenkins/) build server
 
 ## Docker
 
