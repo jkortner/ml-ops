@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+    mlflow:
+        # starts the container mlflow with the image mlflow
+        image: mlflow
+        # if the image mlflow is not available, it will be built with the
+        # Dockerfile in the current directory
+        build: .
+        # YAML interprets xx:yy as base 60 values
+        # --> always specify port definitions as string
+        # (see https://github.com/go-yaml/yaml/issues/34)
+        ports:
+            - "127.0.0.1:5000:5000"
+        networks:
+            - net
+        # Environment variables are required in order to connect to the 
+        # PostgreSQL database. The variables are applied when starting the
+        # mlflow tracking server. See CMD in Dockerfile
+        environment:
+            - DB_AUTH=mlflow:mlflow
+            - DB_CONN=db:5432
+        # Store artifacts outside of the container
+        volumes:
+            - artifacts:/mlflow
+        depends_on: 
+            - db
+        # Wait for 30 sec before killing the container
+        # --> allows for a save shutdown
+        stop_grace_period: 30s
+
+    # The rather generic name 'db' is a convention
+    # --> convention over configuration
+    db:
+        image: postgres
+        networks:
+            - net
+        environment:
+            - POSTGRES_USER=mlflow
+            - POSTGRES_PASSWORD=mlflow
+        volumes:
+            - db_data:/var/lib/postgresql/data
+
+    # adminer is a database web frontend which can be used in order to inspect
+    # database contents. Uncomment service definition below if needed.
+    #
+    # adminer:
+    #     image: adminer
+    #     ports:
+    #         - "127.0.0.1:8055:8080"
+    #     networks:
+    #         - net
+    #     depends_on: 
+    #         - db
+
+# Note that auto-generated networks/volumes will be prefixed with the project
+# name, e.g., <project>_net, if the project name is '<project>'.
+# By default the project name is the name of the current directory or it can
+# be specified via command-line parameter (-p) or with an environment variable
+# (COMPOSE_PROJECT_NAME)
+
+networks:
+    net:
+
+volumes:
+    db_data:
+    artifacts:
