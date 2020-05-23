@@ -1,3 +1,5 @@
 venv*
 .DS_Store     
 credentials.json
+dvc/gogs
+dvc/ml-ops-dvc
