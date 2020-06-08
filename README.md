@@ -40,6 +40,5 @@ Notes:
 
 ## Resources 
 
-Collection of useful articles:
-
  - [towardsdatascience.com/containerize-your-whole-data-science-environment](https://towardsdatascience.com/containerize-your-whole-data-science-environment-or-anything-you-want-with-docker-compose-e962b8ce8ce5)
+ - [Docker ML Cookiecutter template](https://github.com/manifoldai/orbyter-cookiecutter)
