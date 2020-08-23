@@ -2,7 +2,9 @@ version: "3"
 
 services:
     mlflow:
-        # starts the container mlflow with the image mlflow
+        # starts the container mlflow with the image mlflow (latest version)
+        # --> you might want to specify a version tag in production environments
+        # (also check images postgres and minio/minio, see below)
         image: mlflow
         # if the image mlflow is not available, it will be built with the
         # Dockerfile in the current directory
@@ -15,19 +17,43 @@ services:
         networks:
             - net
         # Environment variables are required in order to connect to the 
-        # PostgreSQL database. The variables are applied when starting the
-        # mlflow tracking server. See CMD in Dockerfile
+        # PostgreSQL database and store artifacts to the S3 storage minio.
+        # The variables are applied when starting the mlflow tracking server.
+        # See CMD in Dockerfile
         environment:
+            # PostgreSQL (Experiments)
             - DB_AUTH=mlflow:mlflow
             - DB_CONN=db:5432
-        # Store artifacts outside of the container
-        volumes:
-            - artifacts:/mlflow
+            # MINIO (Artifacts)
+            - ARTIFACT_ROOT=s3://mlflow/
+            - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+            - AWS_ACCESS_KEY_ID=minio
+            - AWS_SECRET_ACCESS_KEY=minio_secret
         depends_on: 
             - db
+            - minio
         # Wait for 30 sec before killing the container
         # --> allows for a save shutdown
         stop_grace_period: 30s
+
+    # S3 store for artifacts
+    minio:
+        image: minio/minio
+        volumes:
+          - minio_data:/data
+        ports:
+          - "9001:9000"
+        networks:
+          - net
+        environment:
+          - MINIO_ACCESS_KEY=minio
+          - MINIO_SECRET_KEY=minio_secret
+        command: server /data
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+          interval: 30s
+          timeout: 20s
+          retries: 3
 
     # The rather generic name 'db' is a convention
     # --> convention over configuration
@@ -63,5 +89,6 @@ networks:
     net:
 
 volumes:
+    minio_data:
     db_data:
     artifacts:
